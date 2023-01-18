@@ -1,6 +1,5 @@
 //@ts-check
 const request = require('supertest')
-const { isExportDeclaration } = require('typescript')
 const app = require('../dist/routes').default
 
 describe('Test the hello-world GET request', () => {
