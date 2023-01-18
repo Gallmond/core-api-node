@@ -26,5 +26,7 @@ async function main() {
 }
 
 main()
-    .then(() => console.log('Processed all customers'))
+    .then(() => {
+        console.log('Processed all customers')
+    })
     .catch(err => console.error(err));

@@ -1,20 +1,8 @@
-import {createConnection} from "mysql2/promise";
 import {IMonolithCustomer} from "../types/MonolithCustomer";
-
-async function getConnection() {
-    return createConnection({
-        host: '0.0.0.0',
-        port: 3306,
-        user: 'dev',
-        password: 'dev',
-        database: 'luxe',
-    });
-}
+import {pool} from "./postgres";
 
 export async function chunkById(lastId: number, limit: number = 1000): Promise<IMonolithCustomer[]> {
-    const connection = await getConnection();
-
-    let [rows, _]: any = await connection.query(`
+    let [rows, _]: any = await pool.query(`
         SELECT customer_id,
                customer_uuid,
                customer_firstname,
@@ -27,17 +15,11 @@ export async function chunkById(lastId: number, limit: number = 1000): Promise<I
         ORDER BY customer_id ASC LIMIT ${limit}
     `)
 
-    connection.end();
-
     return rows;
 }
 
 export async function getCustomerCount(): Promise<number> {
-    const connection = await getConnection();
-
-    let [rows, _]: any = await connection.query('SELECT COUNT(*) as customerCount FROM customers')
-
-    connection.end();
+    let [rows, _]: any = await pool.query('SELECT COUNT(*) as customerCount FROM customers')
 
     return rows[0].customerCount;
 }
