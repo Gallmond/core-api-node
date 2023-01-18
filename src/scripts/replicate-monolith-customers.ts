@@ -29,4 +29,6 @@ main()
     .then(() => {
         console.log('Processed all customers')
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err)
+    });
