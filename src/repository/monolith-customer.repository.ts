@@ -1,5 +1,5 @@
 import {IMonolithCustomer} from "../types/MonolithCustomer";
-import {pool} from "./postgres";
+import {pool} from "./mysql";
 
 export async function chunkById(lastId: number, limit: number = 1000): Promise<IMonolithCustomer[]> {
     let [rows, _]: any = await pool.query(`
