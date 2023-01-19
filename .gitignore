@@ -1,4 +1,5 @@
 node_modules
+<<<<<<< HEAD
 .env
 
 dist/*
@@ -9,3 +10,7 @@ dist/*
 
 # jest coverage reports can be found in your local /coverage folder after running 'npm run test'
 /coverage
+=======
+.idea
+.env
+>>>>>>> master
