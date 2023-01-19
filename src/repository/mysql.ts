@@ -1,4 +1,4 @@
-import {createPool, Pool} from 'mysql2/promise';
+import {createPool, Pool} from 'mysql2/promise'
 
 export const pool: Pool = createPool({
     connectionLimit: 10,
@@ -7,4 +7,4 @@ export const pool: Pool = createPool({
     user: 'dev',
     password: 'dev',
     database: 'luxe',
-});
+})

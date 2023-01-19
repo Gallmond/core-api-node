@@ -1,14 +1,14 @@
-import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import DiscussionRepository from "../repository/DiscussionRepository";
-import {DiscussionState} from "../enums/DiscussionState";
-import {MonolithDiscussionStatus} from '../enums/MonolithDiscussionStatus';
-import {IDiscussionDTO} from "../types/DiscussionDTO";
+import {IMonolithDiscussion} from '../types/MonolithDiscussion'
+import DiscussionRepository from '../repository/DiscussionRepository'
+import {DiscussionState} from '../enums/DiscussionState'
+import {MonolithDiscussionStatus} from '../enums/MonolithDiscussionStatus'
+import {IDiscussionDTO} from '../types/DiscussionDTO'
 
 export default class MonolithDiscussionService {
-    #discussionRepository: DiscussionRepository;
+    #discussionRepository: DiscussionRepository
 
     constructor(discussionRepository: DiscussionRepository) {
-        this.#discussionRepository = discussionRepository;
+        this.#discussionRepository = discussionRepository
     }
 
     async processRows(rows: IMonolithDiscussion[]): Promise<number> {
@@ -19,7 +19,7 @@ export default class MonolithDiscussionService {
                 [MonolithDiscussionStatus.decline]: DiscussionState.declined,
                 [MonolithDiscussionStatus.discuss]: DiscussionState.discuss,
                 [MonolithDiscussionStatus.request]: DiscussionState.requested,
-            };
+            }
 
             return {
                 id: row.discussion_uuid,
@@ -30,6 +30,6 @@ export default class MonolithDiscussionService {
             }
         })
 
-        return await this.#discussionRepository.createManyFromDto(discussionDTOs);
+        return await this.#discussionRepository.createManyFromDto(discussionDTOs)
     }
 }

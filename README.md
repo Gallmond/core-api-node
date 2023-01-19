@@ -48,3 +48,60 @@ core-api-node.js/
         ├── discusionRepository.test.js
         └── ... 
 ```
+
+# Local postgres
+
+Install with `brew install postgresql`
+
+Start with `brew services start postgresql`
+
+Connect to cli with `psql <database>`
+
+Show existing databases with `\l`
+
+By default a `postgres` database will exist with your username as the owner
+
+```bash
+gavin@LHS-MAC44 core-api-node.js % psql postgres
+psql (14.6 (Homebrew))
+Type "help" for help.
+
+postgres=# \l
+                         List of databases
+   Name    | Owner | Encoding | Collate | Ctype | Access privileges 
+-----------+-------+----------+---------+-------+-------------------
+ postgres  | gavin | UTF8     | C       | C     | 
+ template0 | gavin | UTF8     | C       | C     | =c/gavin         +
+           |       |          |         |       | gavin=CTc/gavin
+ template1 | gavin | UTF8     | C       | C     | =c/gavin         +
+           |       |          |         |       | gavin=CTc/gavin
+(3 rows)
+```
+
+# prisma migrations
+
+//TODO check this. Seems very hands on and manual. Not automation friendly. Should migrations be commited to VC?
+
+Manually connect to the local postgres and create a new database `core-api`
+
+Compose .env variable DATABASE_URL like so:
+
+```
+DATABASE_URL="postgres://<your-local-username>@127.0.0.1:5432/<database-name>"
+```
+
+Delete any prisma/migrations files and the migration lock file (leave the schema.prisma file)
+
+Run `npx prisma migrate dev --name init`
+
+Done.
+
+# Migrations
+
+This will require:
+
+- Monolith database running locally
+
+Run `node ./dist/scripts/ReplicateMonolithCustomers.js` to migrate monolith customers into local postgres database
+
+Run `node ./dist/scripts/ReplicateMonolithDiscussions.js` to migrate monolith customers into local postgres database

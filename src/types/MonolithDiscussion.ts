@@ -1,4 +1,4 @@
-import {MonolithDiscussionStatus} from "../enums/MonolithDiscussionStatus";
+import {MonolithDiscussionStatus} from '../enums/MonolithDiscussionStatus'
 
 export interface IMonolithDiscussion {
     discussion_id: number;

@@ -1,14 +1,14 @@
-import {IMonolithCustomer} from "../types/MonolithCustomer";
-import CustomerRepository from "../repository/CustomerRepository";
+import {IMonolithCustomer} from '../types/MonolithCustomer'
+import CustomerRepository from '../repository/CustomerRepository'
 
 export default class MonolithCustomerService {
-    #customerRepository: CustomerRepository;
+    #customerRepository: CustomerRepository
 
     constructor(customerRepository: CustomerRepository) {
-        this.#customerRepository = customerRepository;
+        this.#customerRepository = customerRepository
     }
 
     async processRows(rows: IMonolithCustomer[]): Promise<number> {
-        return await this.#customerRepository.createManyFromMonolithCustomers(rows);
+        return await this.#customerRepository.createManyFromMonolithCustomers(rows)
     }
 }

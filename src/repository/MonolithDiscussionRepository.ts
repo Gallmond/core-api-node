@@ -1,11 +1,11 @@
-import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import {Pool} from "mysql2/promise";
+import {IMonolithDiscussion} from '../types/MonolithDiscussion'
+import {Pool, RowDataPacket} from 'mysql2/promise'
 
 export default class MonolithDiscussionRepository {
-    #pool: Pool;
+    #pool: Pool
 
     constructor(pool: Pool) {
-        this.#pool = pool;
+        this.#pool = pool
     }
 
     async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithDiscussion[]> {
@@ -23,12 +23,12 @@ export default class MonolithDiscussionRepository {
             ORDER BY discussion_id ASC LIMIT ${limit}
         `)
 
-        return rows;
+        return rows
     }
 
     async getDiscussionCount(): Promise<number> {
         const [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as discussionCount FROM discussions WHERE discussion_uuid <> ""')
 
-        return rows[0].discussionCount;
+        return rows[0].discussionCount
     }
 }
