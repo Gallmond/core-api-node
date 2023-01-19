@@ -1,12 +1,12 @@
-import {IMessageDTO} from "../types/MessageDTO";
-import {IMonolithMessage} from "../types/MonolithMessage";
-import MessageRepository from "../repository/MessageRepository";
+import {IMessageDTO} from '../types/MessageDTO'
+import {IMonolithMessage} from '../types/MonolithMessage'
+import MessageRepository from '../repository/MessageRepository'
 
 export default class MonolithMessageService {
-    #messageRepository: MessageRepository;
+    #messageRepository: MessageRepository
 
     constructor(messageRepository: MessageRepository) {
-        this.#messageRepository = messageRepository;
+        this.#messageRepository = messageRepository
     }
 
     async processRows(rows: IMonolithMessage[]): Promise<number> {
@@ -21,9 +21,9 @@ export default class MonolithMessageService {
                 read_at: row.message_read,
             }
         }).filter(dto => {
-            return dto.discussionId !== '' && dto.discussionId !== null && dto.content !== 'instant_default_message';
-        });
+            return dto.discussionId !== '' && dto.discussionId !== null && dto.content !== 'instant_default_message'
+        })
 
-        return await this.#messageRepository.createManyFromDto(messageDTOs);
+        return await this.#messageRepository.createManyFromDto(messageDTOs)
     }
 }

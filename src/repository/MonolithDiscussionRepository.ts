@@ -8,8 +8,8 @@ export default class MonolithDiscussionRepository {
         this.#pool = pool
     }
 
-    async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithDiscussion[]> {
-        const [rows, _]: any = await this.#pool.query(`
+    async chunkById(lastId: number, limit = 1000): Promise<IMonolithDiscussion[]> {
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT discussion_id,
                    discussion_uuid,
                    discussion_type,
@@ -23,11 +23,11 @@ export default class MonolithDiscussionRepository {
             ORDER BY discussion_id ASC LIMIT ${limit}
         `)
 
-        return rows
+        return rows as IMonolithDiscussion[]
     }
 
     async getDiscussionCount(): Promise<number> {
-        const [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as discussionCount FROM discussions WHERE discussion_uuid <> ""')
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query('SELECT COUNT(*) as discussionCount FROM discussions WHERE discussion_uuid <> ""')
 
         return rows[0].discussionCount
     }

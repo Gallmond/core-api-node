@@ -1,11 +1,11 @@
-import {PrismaClient} from "@prisma/client";
-import {IMessageDTO} from "../types/MessageDTO";
+import {PrismaClient} from '@prisma/client'
+import {IMessageDTO} from '../types/MessageDTO'
 
 export default class MessageRepository {
-    #prisma: PrismaClient;
+    #prisma: PrismaClient
 
     constructor(prisma: PrismaClient) {
-        this.#prisma = prisma;
+        this.#prisma = prisma
     }
 
     async createManyFromDto(dtos: IMessageDTO[]) {
@@ -20,11 +20,11 @@ export default class MessageRepository {
                 read_at: dto.read_at,
             })),
             skipDuplicates: true,
-        });
+        })
 
 
-        this.#prisma.$disconnect();
+        this.#prisma.$disconnect()
 
-        return result.count;
+        return result.count
     }
 }

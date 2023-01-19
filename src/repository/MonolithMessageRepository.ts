@@ -1,15 +1,15 @@
-import {Pool} from "mysql2/promise";
-import {IMonolithMessage} from "../types/MonolithMessage";
+import {Pool, RowDataPacket} from 'mysql2/promise'
+import {IMonolithMessage} from '../types/MonolithMessage'
 
 export default class MonolithMessageRepository {
-    #pool: Pool;
+    #pool: Pool
 
     constructor(pool: Pool) {
-        this.#pool = pool;
+        this.#pool = pool
     }
 
-    async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithMessage[]> {
-        const [rows, _]: any = await this.#pool.query(`
+    async chunkById(lastId: number, limit = 1000): Promise<IMonolithMessage[]> {
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT message_id,
                    message_uuid,
                    message_from,
@@ -27,12 +27,12 @@ export default class MonolithMessageRepository {
             ORDER BY message_id ASC LIMIT ${limit}
         `)
 
-        return rows;
+        return rows as IMonolithMessage[]
     }
 
     async getMessageCount(): Promise<number> {
-        const [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as messageCount FROM discussion_messages WHERE message_uuid <> ""')
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query('SELECT COUNT(*) as messageCount FROM discussion_messages WHERE message_uuid <> ""')
 
-        return rows[0].messageCount;
+        return rows[0].messageCount
     }
 }
