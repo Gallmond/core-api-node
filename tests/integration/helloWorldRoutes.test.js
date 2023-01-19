@@ -1,6 +1,6 @@
 //@ts-check
 const request = require('supertest')
-const app = require('../dist/routes').default
+const app = require('../../dist/app').default
 
 describe('Test the hello-world GET request', () => {
     test('It should return status 200 and the expected json', async () => {
