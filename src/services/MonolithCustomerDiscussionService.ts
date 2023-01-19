@@ -1,12 +1,12 @@
-import CustomerDiscussionRepository from "../repository/CustomerDiscussionRepository";
-import {IMonolithCustomerDiscussion} from "../types/MonolithCustomerDiscussion";
-import {ICustomerDiscussionDTO} from "../types/CustomerDiscussionDTO";
+import CustomerDiscussionRepository from '../repository/CustomerDiscussionRepository'
+import {IMonolithCustomerDiscussion} from '../types/MonolithCustomerDiscussion'
+import {ICustomerDiscussionDTO} from '../types/CustomerDiscussionDTO'
 
 export default class MonolithCustomerDiscussionService {
-    #customerDiscussionRepository: CustomerDiscussionRepository;
+    #customerDiscussionRepository: CustomerDiscussionRepository
 
     constructor(customerDiscussionRepository: CustomerDiscussionRepository) {
-        this.#customerDiscussionRepository = customerDiscussionRepository;
+        this.#customerDiscussionRepository = customerDiscussionRepository
     }
 
     async processRows(rows: IMonolithCustomerDiscussion[]): Promise<number> {
@@ -21,6 +21,6 @@ export default class MonolithCustomerDiscussionService {
             }
         })
 
-        return await this.#customerDiscussionRepository.createManyFromDto(customerDiscussionDTOs);
+        return await this.#customerDiscussionRepository.createManyFromDto(customerDiscussionDTOs)
     }
 }

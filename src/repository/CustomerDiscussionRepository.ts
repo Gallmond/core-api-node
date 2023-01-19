@@ -1,12 +1,11 @@
-import {PrismaClient} from "@prisma/client";
-import {IDiscussionDTO} from "../types/DiscussionDTO";
-import {ICustomerDiscussionDTO} from "../types/CustomerDiscussionDTO";
+import {PrismaClient} from '@prisma/client'
+import {ICustomerDiscussionDTO} from '../types/CustomerDiscussionDTO'
 
 export default class CustomerDiscussionRepository {
-    #prisma: PrismaClient;
+    #prisma: PrismaClient
 
     constructor(prisma: PrismaClient) {
-        this.#prisma = prisma;
+        this.#prisma = prisma
     }
 
     async createManyFromDto(dtos: ICustomerDiscussionDTO[]) {
@@ -20,11 +19,11 @@ export default class CustomerDiscussionRepository {
                 deleted_at: dto.deletedAt,
             })),
             skipDuplicates: true,
-        });
+        })
 
 
-        this.#prisma.$disconnect();
+        this.#prisma.$disconnect()
 
-        return result.count;
+        return result.count
     }
 }

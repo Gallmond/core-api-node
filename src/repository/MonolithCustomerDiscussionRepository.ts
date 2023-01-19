@@ -1,16 +1,15 @@
-import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import {Pool} from "mysql2/promise";
-import {IMonolithCustomerDiscussion} from "../types/MonolithCustomerDiscussion";
+import {Pool, RowDataPacket} from 'mysql2/promise'
+import {IMonolithCustomerDiscussion} from '../types/MonolithCustomerDiscussion'
 
 export default class MonolithCustomerDiscussionRepository {
-    #pool: Pool;
+    #pool: Pool
 
     constructor(pool: Pool) {
-        this.#pool = pool;
+        this.#pool = pool
     }
 
-    async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithCustomerDiscussion[]> {
-        const [rows, _]: any = await this.#pool.query(`
+    async chunkById(lastId: number, limit = 1000): Promise<IMonolithCustomerDiscussion[]> {
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT
                 cd.link_id,
                 cd.link_uuid,
@@ -34,11 +33,11 @@ export default class MonolithCustomerDiscussionRepository {
                 LIMIT ${limit}
         `)
 
-        return rows;
+        return rows as IMonolithCustomerDiscussion[]
     }
 
     async getCustomerDiscussionCount(): Promise<number> {
-        let [rows, _]: any = await this.#pool.query(`
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT COUNT(*) as customerDiscussionCount
             FROM customer_discussions
                      LEFT JOIN discussions ON discussions.discussion_id = customer_discussions.link_discussion
@@ -46,6 +45,6 @@ export default class MonolithCustomerDiscussionRepository {
               AND discussion_uuid <> ""
         `)
 
-        return rows[0].customerDiscussionCount;
+        return rows[0].customerDiscussionCount
     }
 }

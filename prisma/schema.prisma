@@ -18,6 +18,7 @@ model Customer {
   updated_at           DateTime @default(now())
   discussions          Discussion[]
   customer_discussions CustomerDiscussion[]
+  messages             Message[]
 }
 
 model Discussion {
@@ -29,6 +30,7 @@ model Discussion {
     created_at           DateTime @default(now())
     updated_at           DateTime @default(now())
     customer_discussions CustomerDiscussion[]
+    messsages            Message[]
 }
 
 model CustomerDiscussion {
@@ -41,4 +43,17 @@ model CustomerDiscussion {
     updated_at    DateTime @default(now())
     deleted_at    DateTime?
     agreed_at     DateTime?
+}
+
+model Message {
+id               String  @id
+discussion       Discussion @relation(fields: [discussion_id], references: [id])
+discussion_id    String
+sender           Customer @relation(fields: [sender_id], references: [id])
+sender_id        String
+content          String
+content_redacted String
+created_at       DateTime @default(now())
+updated_at       DateTime @default(now())
+read_at          DateTime?
 }
