@@ -1,11 +1,14 @@
-import * as MonolithCustomerRepository from '../repository/monolith-customer.repository';
-import * as MonolithCustomerService from "../services/monolith-customer.service";
+import MonolithCustomerRepository from "../repository/MonolithCustomerRepository";
+import * as MonolithCustomerService from "../services/MonolithCustomerService";
 import {PrismaClient} from "@prisma/client";
 import {IMonolithCustomer} from "../types/MonolithCustomer";
+import {pool} from "../repository/mysql";
 
 async function main() {
     const prisma = new PrismaClient()
-    const total = await MonolithCustomerRepository.getCustomerCount();
+    const monolithCustomerRepository = new MonolithCustomerRepository(pool);
+
+    const total = monolithCustomerRepository.getCustomerCount();
 
     let lastId = 0;
     let processed = 0;
@@ -13,7 +16,7 @@ async function main() {
 
     while (process) {
         try {
-            const monolithCustomerRows: IMonolithCustomer[] = await MonolithCustomerRepository.chunkById(lastId);
+            const monolithCustomerRows: IMonolithCustomer[] = await monolithCustomerRepository.chunkById(lastId);
 
             if (monolithCustomerRows.length === 0) {
                 process = false;

@@ -1,11 +1,14 @@
-import * as MonolithDiscussionRepository from '../repository/monolith-discussion.repository';
+import MonolithDiscussionRepository from "../repository/MonolithDiscussionRepository";
 import {PrismaClient} from "@prisma/client";
 import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import * as MonolithDiscussionService from "../services/monolith-discussion.service";
+import * as MonolithDiscussionService from "../services/MonolithDiscussionService";
+import {pool} from "../repository/mysql";
 
 async function main() {
     const prisma = new PrismaClient()
-    const total = await MonolithDiscussionRepository.getDiscussionCount();
+    const monolithDiscussionRepository = new MonolithDiscussionRepository(pool);
+
+    const total = await monolithDiscussionRepository.getDiscussionCount();
 
     let lastId = 0;
     let processed = 0;
@@ -13,7 +16,7 @@ async function main() {
 
     while (process) {
         try {
-            const monolithDiscussionRows: IMonolithDiscussion[] = await MonolithDiscussionRepository.chunkById(lastId);
+            const monolithDiscussionRows: IMonolithDiscussion[] = await monolithDiscussionRepository.chunkById(lastId);
 
             if (monolithDiscussionRows.length === 0) {
                 process = false;

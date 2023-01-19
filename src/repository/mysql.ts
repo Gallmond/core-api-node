@@ -1,6 +1,6 @@
-import {createPool} from 'mysql2/promise';
+import {createPool, Pool} from 'mysql2/promise';
 
-export const pool = createPool({
+export const pool: Pool = createPool({
     connectionLimit: 10,
     host: '0.0.0.0',
     port: 3306,
