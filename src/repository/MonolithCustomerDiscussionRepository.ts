@@ -38,7 +38,7 @@ export default class MonolithCustomerDiscussionRepository {
     }
 
     async getCustomerDiscussionCount(): Promise<number> {
-        let [rows, _]: any = await this.#pool.query(`
+        const [rows, _]: any = await this.#pool.query(`
             SELECT COUNT(*) as customerDiscussionCount
             FROM customer_discussions
                      LEFT JOIN discussions ON discussions.discussion_id = customer_discussions.link_discussion

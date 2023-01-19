@@ -9,7 +9,7 @@ export default class MonolithCustomerRepository {
     }
 
     async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithCustomer[]> {
-        let [rows, _]: any = await this.#pool.query(`
+        const [rows, _]: any = await this.#pool.query(`
             SELECT customer_id,
                    customer_uuid,
                    customer_firstname,
@@ -26,7 +26,7 @@ export default class MonolithCustomerRepository {
     }
 
     async getCustomerCount(): Promise<number> {
-        let [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as customerCount FROM customers')
+        const [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as customerCount FROM customers')
 
         return rows[0].customerCount;
     }
