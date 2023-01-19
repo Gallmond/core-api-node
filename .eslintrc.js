@@ -18,6 +18,7 @@ module.exports = {
         '@typescript-eslint'
     ],
     'rules': {
+        'eol-last': ['error', 'always'],
         'indent': [
             'error',
             4
