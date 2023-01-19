@@ -1,14 +1,18 @@
 import MonolithCustomerRepository from "../repository/MonolithCustomerRepository";
-import * as MonolithCustomerService from "../services/MonolithCustomerService";
+import MonolithCustomerService from "../services/MonolithCustomerService";
 import {PrismaClient} from "@prisma/client";
 import {IMonolithCustomer} from "../types/MonolithCustomer";
 import {pool} from "../repository/mysql";
+import CustomerRepository from "../repository/CustomerRepository";
 
 async function main() {
     const prisma = new PrismaClient()
-    const monolithCustomerRepository = new MonolithCustomerRepository(pool);
 
-    const total = monolithCustomerRepository.getCustomerCount();
+    const monolithCustomerRepository = new MonolithCustomerRepository(pool);
+    const customerRepository = new CustomerRepository(prisma);
+    const monolithCustomerService = new MonolithCustomerService(customerRepository);
+
+    const total = await monolithCustomerRepository.getCustomerCount();
 
     let lastId = 0;
     let processed = 0;
@@ -23,16 +27,16 @@ async function main() {
                 break;
             }
 
-            const processedRows = await MonolithCustomerService.processRows(prisma, monolithCustomerRows);
+            const processedRows = await monolithCustomerService.processRows(monolithCustomerRows);
 
             const highestIdInResultSet = monolithCustomerRows.at(-1)?.customer_id;
             if (highestIdInResultSet) {
                 lastId = highestIdInResultSet;
             }
 
-            processed += processedRows;
+            processed += monolithCustomerRows.length;
 
-            console.log(`Processed ${processed}/${total} rows`);
+            console.log(`Processed ${processed}/${total} rows (${processedRows} inserts from batch)`);
         } catch (err) {
             console.error(err);
         }

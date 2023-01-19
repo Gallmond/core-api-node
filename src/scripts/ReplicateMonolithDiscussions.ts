@@ -1,12 +1,16 @@
 import MonolithDiscussionRepository from "../repository/MonolithDiscussionRepository";
 import {PrismaClient} from "@prisma/client";
 import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import * as MonolithDiscussionService from "../services/MonolithDiscussionService";
+import MonolithDiscussionService from "../services/MonolithDiscussionService";
 import {pool} from "../repository/mysql";
+import DiscussionRepository from "../repository/DiscussionRepository";
 
 async function main() {
     const prisma = new PrismaClient()
+
     const monolithDiscussionRepository = new MonolithDiscussionRepository(pool);
+    const discussionRepository = new DiscussionRepository(prisma);
+    const monolithDiscussionService = new MonolithDiscussionService(discussionRepository);
 
     const total = await monolithDiscussionRepository.getDiscussionCount();
 
@@ -23,16 +27,16 @@ async function main() {
                 break;
             }
 
-            const processedRows = await MonolithDiscussionService.processRows(prisma, monolithDiscussionRows);
+            const processedRows = await monolithDiscussionService.processRows(monolithDiscussionRows);
 
             const highestIdInResultSet = monolithDiscussionRows.at(-1)?.discussion_id;
             if (highestIdInResultSet) {
                 lastId = highestIdInResultSet;
             }
 
-            processed += processedRows;
+            processed += monolithDiscussionRows.length
 
-            console.log(`Processed ${processed}/${total} rows`);
+            console.log(`Processed ${processed}/${total} rows (${processedRows} inserts from batch)`);
         } catch (err) {
             console.error(err);
         }
