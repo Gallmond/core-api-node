@@ -25,7 +25,7 @@ export default class MonolithDiscussionService {
                 id: row.discussion_uuid,
                 initiatorId: row.discussion_sender_uuid,
                 type: row.discussion_type,
-                state: row.discussion_status ? states[row.discussion_status] : null,
+                state: states[row.discussion_status],
                 createdAt: row.discussion_created,
             }
         })
