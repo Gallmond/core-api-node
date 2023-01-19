@@ -1,11 +1,11 @@
-import {PrismaClient} from "@prisma/client";
-import {IMonolithCustomer} from "../types/MonolithCustomer";
+import {PrismaClient} from '@prisma/client'
+import {IMonolithCustomer} from '../types/MonolithCustomer'
 
 export default class CustomerRepository {
-    #prisma: PrismaClient;
+    #prisma: PrismaClient
 
     constructor(prismaClient: PrismaClient) {
-        this.#prisma = prismaClient;
+        this.#prisma = prismaClient
     }
 
     async createManyFromMonolithCustomers(rows: IMonolithCustomer[]): Promise<number> {
@@ -19,11 +19,11 @@ export default class CustomerRepository {
                 created_at: row.customer_created,
             })),
             skipDuplicates: true,
-        });
+        })
 
 
-        this.#prisma.$disconnect();
+        this.#prisma.$disconnect()
 
-        return result.count;
+        return result.count
     }
 }

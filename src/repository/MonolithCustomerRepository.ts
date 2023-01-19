@@ -1,15 +1,15 @@
-import {IMonolithCustomer} from "../types/MonolithCustomer";
-import {Pool} from "mysql2/promise";
+import {IMonolithCustomer} from '../types/MonolithCustomer'
+import {Pool, RowDataPacket} from 'mysql2/promise'
 
 export default class MonolithCustomerRepository {
-    #pool: Pool;
+    #pool: Pool
 
     constructor(pool: Pool) {
-        this.#pool = pool;
+        this.#pool = pool
     }
 
-    async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithCustomer[]> {
-        let [rows, _]: any = await this.#pool.query(`
+    async chunkById(lastId: number, limit = 1000): Promise<IMonolithCustomer[]> {
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT customer_id,
                    customer_uuid,
                    customer_firstname,
@@ -22,12 +22,12 @@ export default class MonolithCustomerRepository {
             ORDER BY customer_id ASC LIMIT ${limit}
         `)
 
-        return rows;
+        return rows as IMonolithCustomer[]
     }
 
     async getCustomerCount(): Promise<number> {
-        let [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as customerCount FROM customers')
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query('SELECT COUNT(*) as customerCount FROM customers')
 
-        return rows[0].customerCount;
+        return rows[0].customerCount
     }
 }

@@ -1,18 +1,18 @@
-import {IMonolithDiscussion} from "../types/MonolithDiscussion";
-import {Pool} from "mysql2/promise";
+import {IMonolithDiscussion} from '../types/MonolithDiscussion'
+import {Pool, RowDataPacket} from 'mysql2/promise'
 
 export default class MonolithDiscussionRepository {
-    #pool: Pool;
+    #pool: Pool
 
     constructor(pool: Pool) {
-        this.#pool = pool;
+        this.#pool = pool
     }
 
-    async chunkById(lastId: number, limit: number = 1000): Promise<IMonolithDiscussion[]> {
-        let rows = [];
+    async chunkById(lastId: number, limit = 1000): Promise<IMonolithDiscussion[]> {
+        let rows: IMonolithDiscussion[] = []
 
         try {
-            let [results, _]: any = await this.#pool.query(`
+            const [results]: [RowDataPacket[], unknown] = await this.#pool.query(`
                 SELECT discussion_id,
                        discussion_uuid,
                        discussion_type,
@@ -26,17 +26,17 @@ export default class MonolithDiscussionRepository {
                 ORDER BY discussion_id ASC LIMIT ${limit}
             `)
 
-            rows = results;
+            rows = results as IMonolithDiscussion[]
         } catch (err) {
-            console.error(err);
+            console.error(err)
         }
 
-        return rows;
+        return rows
     }
 
     async getDiscussionCount(): Promise<number> {
-        let [rows, _]: any = await this.#pool.query('SELECT COUNT(*) as discussionCount FROM discussions WHERE discussion_uuid <> ""')
+        const [rows]: [RowDataPacket[], unknown] = await this.#pool.query('SELECT COUNT(*) as discussionCount FROM discussions WHERE discussion_uuid <> ""')
 
-        return rows[0].discussionCount;
+        return rows[0].discussionCount
     }
 }
