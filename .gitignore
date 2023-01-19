@@ -1,10 +1,6 @@
 node_modules
+.idea
 .env
 dist/*
-
-# ide settings
-.idea
 .vscode
-
-# jest coverage reports can be found in your local /coverage folder after running 'npm run test'
 /coverage
