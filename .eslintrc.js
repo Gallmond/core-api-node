@@ -1,13 +1,24 @@
 module.exports = {
     'env': {
-        'browser': true,
-        'es2021': true
+        'node': true,
+        'es2021': true,
+        // jest globals are defined (describe, test, etc)
+        'jest': true,
     },
     'extends': [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended'
     ],
     'overrides': [
+        {
+            'files' : [
+                './tests/**/*.js'
+            ],
+            'rules': {
+                // allows 'require' in jest tests
+                '@typescript-eslint/no-var-requires': 'off',
+            }
+        }
     ],
     'parser': '@typescript-eslint/parser',
     'parserOptions': {
