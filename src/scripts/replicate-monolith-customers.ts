@@ -1,5 +1,5 @@
 import * as MonolithCustomerRepository from '../repository/monolith-customer.repository';
-import {processRows} from "../services/monolith-customer.service";
+import * as MonolithCustomerService from "../services/monolith-customer.service";
 import {PrismaClient} from "@prisma/client";
 import {IMonolithCustomer} from "../types/MonolithCustomer";
 
@@ -7,15 +7,26 @@ async function main() {
     const prisma = new PrismaClient()
     const total = await MonolithCustomerRepository.getCustomerCount();
 
-    let lastId = 1000;
+    let lastId = 0;
     let processed = 0;
+    let process = true;
 
-    while (processed < total) {
+    while (process) {
         try {
             const monolithCustomerRows: IMonolithCustomer[] = await MonolithCustomerRepository.chunkById(lastId);
-            const processedRows = await processRows(prisma, monolithCustomerRows);
 
-            lastId += 1000;
+            if (monolithCustomerRows.length === 0) {
+                process = false;
+                break;
+            }
+
+            const processedRows = await MonolithCustomerService.processRows(prisma, monolithCustomerRows);
+
+            const highestIdInResultSet = monolithCustomerRows.at(-1)?.customer_id;
+            if (highestIdInResultSet) {
+                lastId = highestIdInResultSet;
+            }
+
             processed += processedRows;
 
             console.log(`Processed ${processed}/${total} rows`);

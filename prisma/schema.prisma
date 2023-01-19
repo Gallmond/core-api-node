@@ -16,4 +16,15 @@ model Customer {
   avatar        String?
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
+  discussions   Discussion[]
+}
+
+model Discussion {
+    id            String  @id
+    initiator     Customer @relation(fields: [initiator_id], references: [id])
+    initiator_id  String
+    state         String?
+    type          String?
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
 }
