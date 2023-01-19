@@ -1,5 +1,5 @@
-import {IMonolithDiscussion} from "../types/MonolithDiscussion";
 import {PrismaClient} from "@prisma/client";
+import {IDiscussionDTO} from "../types/DiscussionDTO";
 
 export default class DiscussionRepository {
     #prisma: PrismaClient;
@@ -8,14 +8,14 @@ export default class DiscussionRepository {
         this.#prisma = prisma;
     }
 
-    async createManyFromMonolithDiscussions(rows: IMonolithDiscussion[]) {
+    async createManyFromDto(dtos: IDiscussionDTO[]) {
         const result = await this.#prisma.discussion.createMany({
-            data: rows.map(row => ({
-                id: row.discussion_uuid,
-                initiator_id: row.discussion_sender_uuid,
-                type: row.discussion_type,
-                state: row.discussion_status,
-                created_at: row.discussion_created,
+            data: dtos.map(dto => ({
+                id: dto.id,
+                initiator_id: dto.initiatorId,
+                type: dto.type,
+                state: dto.state,
+                created_at: dto.createdAt,
             })),
             skipDuplicates: true,
         });

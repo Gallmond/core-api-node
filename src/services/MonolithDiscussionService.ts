@@ -1,5 +1,8 @@
 import {IMonolithDiscussion} from "../types/MonolithDiscussion";
 import DiscussionRepository from "../repository/DiscussionRepository";
+import {DiscussionState} from "../enums/DiscussionState";
+import {MonolithDiscussionStatus} from '../enums/MonolithDiscussionStatus';
+import {IDiscussionDTO} from "../types/DiscussionDTO";
 
 export default class MonolithDiscussionService {
     #discussionRepository: DiscussionRepository;
@@ -9,6 +12,24 @@ export default class MonolithDiscussionService {
     }
 
     async processRows(rows: IMonolithDiscussion[]): Promise<number> {
-        return await this.#discussionRepository.createManyFromMonolithDiscussions(rows);
+        const discussionDTOs: IDiscussionDTO[] = rows.map(row => {
+            const states: { [key in MonolithDiscussionStatus]: DiscussionState } = {
+                [MonolithDiscussionStatus.agreed]: DiscussionState.agreed,
+                [MonolithDiscussionStatus.cancel]: DiscussionState.cancelled,
+                [MonolithDiscussionStatus.decline]: DiscussionState.declined,
+                [MonolithDiscussionStatus.discuss]: DiscussionState.discuss,
+                [MonolithDiscussionStatus.request]: DiscussionState.requested,
+            };
+
+            return {
+                id: row.discussion_uuid,
+                initiatorId: row.discussion_sender_uuid,
+                type: row.discussion_type,
+                state: row.discussion_status ? states[row.discussion_status] : null,
+                createdAt: row.discussion_created,
+            }
+        })
+
+        return await this.#discussionRepository.createManyFromDto(discussionDTOs);
     }
 }
