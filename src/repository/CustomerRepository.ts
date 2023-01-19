@@ -1,9 +1,15 @@
 import {PrismaClient} from "@prisma/client";
 import {IMonolithCustomer} from "../types/MonolithCustomer";
 
-export async function processRows(prisma: PrismaClient, rows: IMonolithCustomer[]): Promise<number> {
-    try {
-        await prisma.customer.createMany({
+export default class CustomerRepository {
+    #prisma: PrismaClient;
+
+    constructor(prismaClient: PrismaClient) {
+        this.#prisma = prismaClient;
+    }
+
+    async createManyFromMonolithCustomers(rows: IMonolithCustomer[]): Promise<number> {
+        const result = await this.#prisma.customer.createMany({
             data: rows.map(row => ({
                 id: row.customer_uuid,
                 first_name: row.customer_firstname,
@@ -15,11 +21,9 @@ export async function processRows(prisma: PrismaClient, rows: IMonolithCustomer[
             skipDuplicates: true,
         });
 
-        prisma.$disconnect();
-    } catch (err) {
-        console.error(err);
-        prisma.$disconnect();
-    }
 
-    return rows.length;
+        this.#prisma.$disconnect();
+
+        return result.count;
+    }
 }
