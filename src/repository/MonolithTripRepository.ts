@@ -1,6 +1,5 @@
 import {Pool, RowDataPacket} from 'mysql2/promise'
-import {IMonolithMessage} from '../types/MonolithMessage'
-import {IMonolithTrip} from "../types/MonolithTrip";
+import {IMonolithTrip} from '../types/MonolithTrip'
 
 export default class MonolithTripRepository {
     #pool: Pool
@@ -49,6 +48,6 @@ export default class MonolithTripRepository {
             WHERE trip_uuid <> ""
         `)
 
-        return rows[0].tripCount;
+        return rows[0].tripCount
     }
 }
