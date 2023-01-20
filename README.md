@@ -102,6 +102,13 @@ This will require:
 
 - Monolith database running locally
 
-Run `node ./dist/scripts/ReplicateMonolithCustomers.js` to migrate monolith customers into local postgres database
+```bash
+node ./dist/scripts/ReplicateMonolithCustomers.js
+node ./dist/scripts/ReplicateMonolithDiscussions.js
+node ./dist/scripts/ReplicateMonolithCustomerDiscussions.js
+node ./dist/scripts/ReplicateMonolithMessages.js
+node ./dist/scripts/ReplicateMonolithTrips.js
+```
 
-Run `node ./dist/scripts/ReplicateMonolithDiscussions.js` to migrate monolith customers into local postgres database
+
+
