@@ -21,6 +21,7 @@ model Customer {
   messages             Message[]
   hosts                Trip[] @relation(name: "Host")
   guests               Trip[] @relation(name: "Guest")
+  discussion_events    DiscussionEvent[]
 }
 
 model Discussion {
@@ -34,6 +35,7 @@ model Discussion {
     customer_discussions CustomerDiscussion[]
     messages             Message[]
     trips                Trip[]
+    discussion_events    DiscussionEvent[]
 }
 
 model CustomerDiscussion {
@@ -74,4 +76,17 @@ model Trip {
     end           DateTime? @db.Date
     points_value  Int?
     created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
+}
+
+model DiscussionEvent {
+    id            String @id
+    discussion    Discussion @relation(fields: [discussion_id], references: [id])
+    discussion_id String
+    customer      Customer? @relation(fields: [customer_id], references: [id])
+    customer_id   String?
+    type          String
+    parameters    String?
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
 }
