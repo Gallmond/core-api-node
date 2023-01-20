@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {Customer, Prisma, PrismaClient} from '@prisma/client'
 import {IMonolithCustomer} from '../types/MonolithCustomer'
 
 export default class CustomerRepository {
@@ -6,6 +6,18 @@ export default class CustomerRepository {
 
     constructor(prismaClient: PrismaClient) {
         this.#prisma = prismaClient
+    }
+
+    async create(data: Prisma.CustomerCreateArgs ): Promise<Customer>{
+        return await this.#prisma.customer.create(data)
+    }
+
+    async getCustomerByEmail(email: string): Promise<Customer>{
+        return await this.#prisma.customer.findFirstOrThrow({
+            where: {
+                email: email,
+            }
+        })
     }
 
     async createManyFromMonolithCustomers(rows: IMonolithCustomer[]): Promise<number> {
