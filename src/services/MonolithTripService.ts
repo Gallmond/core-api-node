@@ -1,6 +1,6 @@
-import {ITripDTO} from "../types/TripDTO";
-import {IMonolithTrip} from "../types/MonolithTrip";
-import TripRepository from "../repository/TripRepository";
+import {ITripDTO} from '../types/TripDTO'
+import {IMonolithTrip} from '../types/MonolithTrip'
+import TripRepository from '../repository/TripRepository'
 
 export default class MonolithTripService {
     #tripRepository: TripRepository

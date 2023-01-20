@@ -1,6 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {IDiscussionDTO} from '../types/DiscussionDTO'
-import {ITripDTO} from "../types/TripDTO";
+import {ITripDTO} from '../types/TripDTO'
 
 export default class TripRepository {
     #prisma: PrismaClient
