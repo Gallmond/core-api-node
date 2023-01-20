@@ -19,6 +19,8 @@ model Customer {
   discussions          Discussion[]
   customer_discussions CustomerDiscussion[]
   messages             Message[]
+  hosts                Trip[] @relation(name: "Host")
+  guests               Trip[] @relation(name: "Guest")
 }
 
 model Discussion {
@@ -30,7 +32,8 @@ model Discussion {
     created_at           DateTime @default(now())
     updated_at           DateTime @default(now())
     customer_discussions CustomerDiscussion[]
-    messsages            Message[]
+    messages             Message[]
+    trips                Trip[]
 }
 
 model CustomerDiscussion {
@@ -46,14 +49,29 @@ model CustomerDiscussion {
 }
 
 model Message {
-id               String  @id
-discussion       Discussion @relation(fields: [discussion_id], references: [id])
-discussion_id    String
-sender           Customer @relation(fields: [sender_id], references: [id])
-sender_id        String
-content          String
-content_redacted String
-created_at       DateTime @default(now())
-updated_at       DateTime @default(now())
-read_at          DateTime?
+    id               String  @id
+    discussion       Discussion @relation(fields: [discussion_id], references: [id])
+    discussion_id    String
+    sender           Customer @relation(fields: [sender_id], references: [id])
+    sender_id        String
+    content          String
+    content_redacted String
+    created_at       DateTime @default(now())
+    updated_at       DateTime @default(now())
+    read_at          DateTime?
+}
+
+model Trip {
+    id            String @id
+    discussion    Discussion @relation(fields: [discussion_id], references: [id])
+    discussion_id String
+    guest         Customer @relation(name: "Guest", fields: [guest_id], references: [id])
+    guest_id      String
+    host          Customer @relation(name: "Host", fields: [host_id], references: [id])
+    host_id       String
+    property_id   String
+    start         DateTime? @db.Date
+    end           DateTime? @db.Date
+    points_value  Int?
+    created_at    DateTime @default(now())
 }
