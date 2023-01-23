@@ -8,6 +8,13 @@ import BaseController from './BaseController'
 import HTTPException from 'exceptions/HTTPException'
 
 class AuthController extends BaseController {
+
+    echo: RequestHandler = async (req, res) => {
+        const { authenticated, customer } = req
+
+        res.json({authenticated, customer}).end()
+    }
+
     login: RequestHandler = async (req, res, next) => {
 
         const {email, password} = req.body
