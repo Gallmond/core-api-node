@@ -2,8 +2,8 @@
 const AuthService = require('../../dist/services/AuthService').default
 const { default: CustomerService } = require('../../dist/services/CustomerService')
 const { default: CustomerRepository} = require('../../dist/repository/CustomerRepository')
-const {createCustomer} = require("../factories/CustomerFactory");
-const {tearDown} = require("../helpers/DatabaseHelper");
+const {createCustomer} = require('../factories/CustomerFactory')
+const {tearDown} = require('../helpers/DatabaseHelper')
 const Prisma = require('../../dist/repository/Prisma').default
 
 describe('Test the AuthService', () => {
@@ -17,8 +17,8 @@ describe('Test the AuthService', () => {
     )
 
     afterEach(async () => {
-       await tearDown()
-    });
+        await tearDown()
+    })
 
     test('It should be able to create its own hashes and then compare them', async () => {
 
@@ -64,7 +64,7 @@ describe('Test the AuthService', () => {
     it('It return false if the compare fails', async () => {
 
         // given - an incorrect password
-        const customer = createCustomer();
+        const customer = createCustomer()
 
         // when - we authenticate by email and password
         const result = await customerService.authenticateByEmailAndPassword(

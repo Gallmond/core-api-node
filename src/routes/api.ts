@@ -1,7 +1,7 @@
 import authController from 'controllers/authController'
 import helloWorldController from 'controllers/helloWorldController'
 import discussionController from 'controllers/discussionController'
-import DiscussionActivityStreamController from "../controllers/DiscussionActivityStreamController";
+import DiscussionActivityStreamController from '../controllers/DiscussionActivityStreamController'
 import {Router, json} from 'express'
 import jwtAuth from 'middleware/JWTAuth'
 
