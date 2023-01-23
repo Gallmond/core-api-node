@@ -41,7 +41,12 @@ class CustomerService{
 
     async authenticateByEmailAndPassword(email: string, plainTextPassword: string): Promise<boolean | string>
     {
-        const customer = await this.customerRepository.getCustomerByEmail( email )
+        const customer = await this.customerRepository.getCustomerByEmail(email)
+
+        if (!customer) {
+            return false
+        }
+
         const authenticated = await this.authService.compare(plainTextPassword, customer.password)
 
         if(authenticated){

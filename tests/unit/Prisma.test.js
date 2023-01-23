@@ -8,7 +8,6 @@ describe('Prisma singleton', () => {
     const testUserEmail = `${randomBytes(10).toString('hex')}@domain.com`
 
     it('It can create correctly typed records', async () => {
-        
         // given - some info to make a test user
         const data = {
             email: testUserEmail,
@@ -38,7 +37,6 @@ describe('Prisma singleton', () => {
         expect(fetched.email).toEqual(data.email)
         expect(fetched.first_name).toEqual(data.first_name)
         expect(fetched.password).toEqual(data.password)
-
     })
 
     /**
@@ -50,6 +48,8 @@ describe('Prisma singleton', () => {
                 email: testUserEmail
             }
         })
+
+        await client.$disconnect();
     })
 
 })

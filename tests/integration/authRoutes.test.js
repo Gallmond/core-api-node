@@ -1,5 +1,9 @@
 //@ts-check
 const request = require('supertest')
+const {createCustomer} = require("../factories/CustomerFactory");
+const {createCustomerAndLogin} = require("../helpers/CustomerHelper");
+const {default: Prisma} = require("../../dist/repository/Prisma");
+const {tearDown} = require("../helpers/DatabaseHelper");
 const app = require('../../dist/app').default
 
 const expectHTTPException = (response, code, message) => {
@@ -10,12 +14,14 @@ const expectHTTPException = (response, code, message) => {
 }
 
 describe('Auth routes', () => {
+    afterEach(async () => {
+        await tearDown()
+    });
 
     const supertest = request(app)
 
     it('It should return 422 when email / password is missing', async () => {
-
-        // given - an invalid login request 
+        // given - an invalid login request
         const postData = {
             email: 'foo@bar.com'
         }
@@ -30,7 +36,6 @@ describe('Auth routes', () => {
     })
 
     it('It should return 401 when email / password do not pass check', async () => {
-
         // given - an invalid user & password request
         const postData = {
             email: 'foo@bar.com',
@@ -48,17 +53,16 @@ describe('Auth routes', () => {
     })
 
     it('It should return 200 and a token on valid email / password', async () => {
+        // given - a real user credentials
+        const customer = await createCustomer();
 
-        // given - a user we know to exist (in the migrated database)
-        const postData = {
-            email: 'joshua.franks@lovehomeswap.com',
-            password: 'password'
-        }
-
-        // when - we login with the real credentials
+        // when - we make the login request
         const response = await request(app)
             .post('/login')
-            .send(postData)
+            .send({
+                email: customer.email,
+                password: 'password',
+            })
 
         // then - we get a 200 success with an access_token
         expect(response.status).toBe(200)
@@ -66,17 +70,16 @@ describe('Auth routes', () => {
     })
 
     it('...And that token should be able to echo the user on the /echo-user endpoint', async () => {
-
         // given - a real user credentials
-        const postData = {
-            email: 'joshua.franks@lovehomeswap.com',
-            password: 'password'
-        }
+        const {customer, accessToken} = await createCustomerAndLogin();
 
         // when - we make the login request
         const loginResponse = await supertest
             .post('/login')
-            .send(postData)
+            .send({
+                email: customer.email,
+                password: 'password',
+            })
 
         // then - we get a success response with a token
         expect(loginResponse.status).toBe(200)
@@ -85,19 +88,19 @@ describe('Auth routes', () => {
         // when - we then make a request to a proteted route with that token
         const echoResponse = await supertest
             .get('/echo-user')
-            .set('authorization', `Bearer ${loginResponse.body.access_token}`)
+            .set('authorization', `Bearer ${accessToken}`)
             .send()
-
-        // then - we get a success status
-        expect(echoResponse.status).toBe(200)
-        expect(echoResponse.body.authenticated).toBe(true)
 
         // then - we the expected response
         const expectedProps = ['id', 'email', 'first_name', 'last_name', 'avatar']
+
+        expect(echoResponse.status).toBe(200)
+        expect(echoResponse.body.authenticated).toBe(true)
+
         expectedProps.forEach(prop => {
             expect(echoResponse.body.customer).toHaveProperty(prop)
         })
-        expect(echoResponse.body.customer.email).toBe(postData.email)
+        expect(echoResponse.body.customer.email).toBe(customer.email)
     })
 
 })

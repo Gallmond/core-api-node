@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {Message, PrismaClient} from '@prisma/client'
 import {IMessageDTO} from '../types/MessageDTO'
 
 export default class MessageRepository {
@@ -26,5 +26,21 @@ export default class MessageRepository {
         this.#prisma.$disconnect()
 
         return result.count
+    }
+
+    async paginateForDiscussion(discussionId: string, limit = 15): Promise<Message[]> {
+        const messages = await this.#prisma.message.findMany({
+            where: {
+                discussion_id: discussionId,
+            },
+            take: limit,
+            orderBy: {
+                created_at: 'desc',
+            },
+        })
+
+        this.#prisma.$disconnect()
+
+        return messages
     }
 }

@@ -12,8 +12,8 @@ export default class CustomerRepository {
         return await this.#prisma.customer.create(data)
     }
 
-    async getCustomerByEmail(email: string): Promise<Customer>{
-        return await this.#prisma.customer.findFirstOrThrow({
+    async getCustomerByEmail(email: string): Promise<Customer|null>{
+        return await this.#prisma.customer.findFirst({
             where: {
                 email: email,
             }

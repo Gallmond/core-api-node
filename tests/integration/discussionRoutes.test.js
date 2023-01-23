@@ -1,6 +1,8 @@
 //@ts-check
 const request = require('supertest')
 const { default: Prisma } = require('../../dist/repository/Prisma')
+const {createCustomerAndLogin} = require("../helpers/CustomerHelper");
+const {createDiscussionForCustomer} = require("../factories/DiscussionFactory");
 const app = require('../../dist/app').default
 const CustomerService = require('../../dist/services/CustomerService').default
 const CustomerRepository = require('../../dist/repository/CustomerRepository').default
@@ -31,22 +33,29 @@ describe('Test the discussion endpoints', () => {
     test('A user can list discussions, and the first discussion has expected properties', async () => {
         
         // given - an existing user with trips in the tables and their token
-        const email = 'joshua.franks@lovehomeswap.com'
-        const password = 'password'
+        const {customer, accessToken} = await createCustomerAndLogin();
 
-        const token = await customerService.authenticateByEmailAndPassword(email, password)
-        expect(typeof token).toBe('string')
+        const discussions = [
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+            await createDiscussionForCustomer(customer),
+        ]
+
 
         // when - we request their discussions
         const response = await supertest
             .get('/discussions')
-            .set('authorization', `Bearer ${token}`)
+            .set('authorization', `Bearer ${accessToken}`)
             .set('content-type', 'application/json')
             .send({take: 7})
             .timeout(10000)
-        expect(response.status).toBe(200)
 
         // then - we get a resultset as expected
+        expect(response.status).toBe(200)
 
         // this has a lot of parts so lets check some formats
         const { data, pagination } = response.body

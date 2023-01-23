@@ -1,20 +1,23 @@
 //@ts-check
 const request = require('supertest')
-const app = require('../../dist/app').default
+const {createCustomer} = require("../factories/CustomerFactory");
+const {tearDown} = require("../helpers/DatabaseHelper");
+
 const Prisma = require('../../dist/repository/Prisma').default
 const CustomerService = require('../../dist/services/CustomerService').default
 const CustomerRepository = require('../../dist/repository/CustomerRepository').default
 const AuthService = require('../../dist/services/AuthService').default
 
+const app = require('../../dist/app').default
+const supertest = request(app)
 
 describe('Test the echo-user GET request', () => {
+    afterEach(async () => {
+        await tearDown()
+    });
 
-    const supertest = request(app)
-    it('It should show authorised and customer info for valid token', async () => {
-        
-        // given - a real user access token (in the actual db)
-        const email = 'joshua.franks@lovehomeswap.com'
-        const password = 'password'
+    it.only('It should show authorised and customer info for valid token', async () => {
+        const customer = await createCustomer();
 
         const customerRepository = new CustomerRepository(
             Prisma.client
@@ -24,8 +27,7 @@ describe('Test the echo-user GET request', () => {
             customerRepository,
         )
 
-        const token = await customerService.authenticateByEmailAndPassword(email, password)
-        expect(typeof token).toBe('string')
+        const token = await customerService.authenticateByEmailAndPassword(customer.email, 'password')
 
         // when - we make a request to echo user
         const response = await supertest
@@ -39,7 +41,6 @@ describe('Test the echo-user GET request', () => {
 
         // then - we get the expected data
         expect(response.body).toHaveProperty('customer')
-        const customer = await customerRepository.getCustomerByEmail(email)
         expect(response.body.customer.id).toEqual(customer.id)
         expect(response.body.customer.email).toEqual(customer.email)
         expect(response.body.customer.first_name).toEqual(customer.first_name)
