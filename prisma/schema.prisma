@@ -25,7 +25,7 @@ model Customer {
 }
 
 model Discussion {
-    id                   String  @id
+    id                   String  @id @default(uuid())
     initiator            Customer @relation(fields: [initiator_id], references: [id])
     initiator_id         String
     state                String
@@ -39,7 +39,7 @@ model Discussion {
 }
 
 model CustomerDiscussion {
-    id            String  @id
+    id            String  @id @default(uuid())
     customer      Customer @relation(fields: [customer_id], references: [id])
     customer_id   String
     discussion    Discussion @relation(fields: [discussion_id], references: [id])

@@ -1,4 +1,4 @@
-import {ValidMonolithDiscussionEvents} from "../enums/ValidMonolithDiscussionEvents";
+import {ValidMonolithDiscussionEvents} from '../enums/ValidMonolithDiscussionEvents'
 
 export interface IMonolithDiscussionEvent {
     event_id: number;

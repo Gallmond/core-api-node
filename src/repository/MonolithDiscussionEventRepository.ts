@@ -1,7 +1,6 @@
-import {IMonolithDiscussion} from '../types/MonolithDiscussion'
 import {Pool, RowDataPacket} from 'mysql2/promise'
-import {LegacyMonolithDiscussionEvents} from "../enums/LegacyMonolithDiscussionEvents";
-import {IMonolithDiscussionEvent} from "../types/MonolithDiscussionEvent";
+import {LegacyMonolithDiscussionEvents} from '../enums/LegacyMonolithDiscussionEvents'
+import {IMonolithDiscussionEvent} from '../types/MonolithDiscussionEvent'
 
 export default class MonolithDiscussionEventRepository {
     #pool: Pool
@@ -11,7 +10,7 @@ export default class MonolithDiscussionEventRepository {
     }
 
     async chunkById(lastId: number, limit = 1000): Promise<IMonolithDiscussionEvent[]> {
-        const legacyEventString = Object.values(LegacyMonolithDiscussionEvents).map(eventName => `'${eventName}'`).join(',');
+        const legacyEventString = Object.values(LegacyMonolithDiscussionEvents).map(eventName => `'${eventName}'`).join(',')
 
         const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT event_id,
@@ -35,7 +34,7 @@ export default class MonolithDiscussionEventRepository {
     }
 
     async getEventCount(): Promise<number> {
-        const legacyEventString = Object.values(LegacyMonolithDiscussionEvents).map(eventName => `'${eventName}'`).join(',');
+        const legacyEventString = Object.values(LegacyMonolithDiscussionEvents).map(eventName => `'${eventName}'`).join(',')
 
         const [rows]: [RowDataPacket[], unknown] = await this.#pool.query(`
             SELECT COUNT(*) as eventCount

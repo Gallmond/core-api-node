@@ -1,9 +1,9 @@
 import {PrismaClient} from '@prisma/client'
 import {pool} from '../repository/mysql'
-import MonolithDiscussionEventRepository from "../repository/MonolithDiscussionEventRepository";
-import {IMonolithDiscussionEvent} from "../types/MonolithDiscussionEvent";
-import DiscussionEventRepository from "../repository/DiscussionEventRepository";
-import MonolithDiscussionEventService from "../services/MonolithDiscussionEventService";
+import MonolithDiscussionEventRepository from '../repository/MonolithDiscussionEventRepository'
+import {IMonolithDiscussionEvent} from '../types/MonolithDiscussionEvent'
+import DiscussionEventRepository from '../repository/DiscussionEventRepository'
+import MonolithDiscussionEventService from '../services/MonolithDiscussionEventService'
 
 async function main() {
     const prisma = new PrismaClient()

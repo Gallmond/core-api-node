@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {IDiscussionEventDTO} from "../types/DiscussionEventDTO";
+import {IDiscussionEventDTO} from '../types/DiscussionEventDTO'
 
 export default class DiscussionEventRepository {
     #prisma: PrismaClient

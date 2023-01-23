@@ -4,6 +4,8 @@ const app = require('../../dist/app').default
 
 describe('Auth routes', () => {
 
+    const supertest = request(app)
+
     it('It should return 422 when email / password is missing', async () => {
 
         // given - an invalid login request 
@@ -12,13 +14,15 @@ describe('Auth routes', () => {
         }
 
         // when - we make the login request
-        const response = await request(app)
+        const response = await supertest
             .post('/login')
             .send(postData)
 
         // then - we get 422 unprocessible response
         expect(response.status).toBe(422)
-        expect(response.body).toEqual({ message: 'invalid request' })
+        expect(response.body.message).toBe('invalid request')
+        expect(response.body.code).toBe(422)
+        expect(response.body.error).toBe('HTTPException')
     })
 
     it('It should return 401 when email / password do not pass check', async () => {
@@ -30,7 +34,7 @@ describe('Auth routes', () => {
         }
 
         // when - we make the login request
-        const response = await request(app)
+        const response = await supertest
             .post('/login')
             .send(postData)
 
@@ -66,7 +70,7 @@ describe('Auth routes', () => {
         }
 
         // when - we make the login request
-        const loginResponse = await request(app)
+        const loginResponse = await supertest
             .post('/login')
             .send(postData)
 
@@ -75,7 +79,7 @@ describe('Auth routes', () => {
         expect(loginResponse.body).toHaveProperty('access_token')
 
         // when - we then make a request to a proteted route with that token
-        const echoResponse = await request(app)
+        const echoResponse = await supertest
             .get('/echo-user')
             .set('authorization', `Bearer ${loginResponse.body.access_token}`)
             .send()

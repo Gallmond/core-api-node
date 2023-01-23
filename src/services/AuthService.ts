@@ -1,4 +1,4 @@
-import {compare} from 'bcrypt'
+import {compare, hashSync} from 'bcrypt'
 
 class AuthService{
 
@@ -12,6 +12,11 @@ class AuthService{
         }
 
         return hashedString.replace(replaceFlag, withFlag)
+    }
+
+    hash(plainText: string): string
+    {
+        return hashSync(plainText, 10)
     }
 
     async compare(plainText: string, hashed: string): Promise<boolean>

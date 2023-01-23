@@ -1,24 +1,17 @@
 import express from 'express'
-import {routes as helloWorldRoutes} from 'routes/helloWorldRoutes'
-import {routes as authRoutes} from 'routes/authRoutes'
-import { Route } from 'routes/types'
-import jwtAuth from 'middleware/JWTAuth'
 import errorHandler from 'middleware/ErrorHandler'
+import apiRouter from 'routes/api'
+import HTTPException from 'exceptions/HTTPException'
 
 // initialise express
 const app = express()
 
-// middleware
-app.use(express.json()) // enable json request bodies
-app.use(jwtAuth)        // enable JWT auth
+// register routers
+app.all('*', apiRouter)
 
-// register routes
-const routes: Route[] = []
-routes.push(...helloWorldRoutes)
-routes.push(...authRoutes)
-routes.forEach(route => {
-    const [method, routeMatcher, handler] = route
-    app[method](routeMatcher, handler)
+// handle unmatched pages
+app.all('', async (req, res, next) => {
+    next(new HTTPException(404, 'route not found'))
 })
 
 // middleware

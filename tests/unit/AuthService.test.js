@@ -2,6 +2,7 @@
 const AuthService = require('../../dist/services/AuthService').default
 const { default: CustomerService } = require('../../dist/services/CustomerService')
 const { default: CustomerRepository} = require('../../dist/repository/CustomerRepository')
+const { hash } = require('bcrypt')
 const Prisma = require('../../dist/repository/Prisma').default
 
 describe('Test the AuthService', () => {
@@ -13,6 +14,20 @@ describe('Test the AuthService', () => {
         authService, 
         customerRepo
     )
+
+    test('It should be able to create its own hashes and then compare them', async () => {
+
+        // given - some plain text
+        const plainText = 'some cool password'
+        
+        // when - we hash it
+        const hashed = authService.hash(plainText)
+        expect(typeof hashed).toBe('string')
+
+        // then - the compare function can match them
+        const matches = await authService.compare(plainText, hashed)
+        expect(matches).toBe(true)
+    })
 
     /**
      * The algo identified by flag $2a$ (Blowfish-based crypt) had a bug

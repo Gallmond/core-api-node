@@ -1,14 +1,8 @@
-import {IMonolithDiscussion} from '../types/MonolithDiscussion'
-import DiscussionRepository from '../repository/DiscussionRepository'
-import {DiscussionState} from '../enums/DiscussionState'
-import {MonolithDiscussionStatus} from '../enums/MonolithDiscussionStatus'
-import {IDiscussionDTO} from '../types/DiscussionDTO'
-import {IMonolithDiscussionEvent} from "../types/MonolithDiscussionEvent";
-import {IDiscussionEventDTO} from "../types/DiscussionEventDTO";
-import DiscussionEventRepository from "../repository/DiscussionEventRepository";
-import {LegacyMonolithDiscussionEvents} from "../enums/LegacyMonolithDiscussionEvents";
-import {DiscussionEventType} from "../enums/DiscussionEventType";
-import {ValidMonolithDiscussionEvents} from "../enums/ValidMonolithDiscussionEvents";
+import {IMonolithDiscussionEvent} from '../types/MonolithDiscussionEvent'
+import {IDiscussionEventDTO} from '../types/DiscussionEventDTO'
+import DiscussionEventRepository from '../repository/DiscussionEventRepository'
+import {DiscussionEventType} from '../enums/DiscussionEventType'
+import {ValidMonolithDiscussionEvents} from '../enums/ValidMonolithDiscussionEvents'
 
 export default class MonolithDiscussionEventService {
     #discussionEventRepository: DiscussionEventRepository
