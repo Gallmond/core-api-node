@@ -2,6 +2,13 @@
 const request = require('supertest')
 const app = require('../../dist/app').default
 
+const expectHTTPException = (response, code, message) => {
+    expect(response.status).toBe(code)
+    expect(response.body.message).toBe(message)
+    expect(response.body.code).toBe(code)
+    expect(response.body.error).toBe('HTTPException')
+}
+
 describe('Auth routes', () => {
 
     const supertest = request(app)
@@ -19,10 +26,7 @@ describe('Auth routes', () => {
             .send(postData)
 
         // then - we get 422 unprocessible response
-        expect(response.status).toBe(422)
-        expect(response.body.message).toBe('invalid request')
-        expect(response.body.code).toBe(422)
-        expect(response.body.error).toBe('HTTPException')
+        expectHTTPException(response, 422, 'invalid request')
     })
 
     it('It should return 401 when email / password do not pass check', async () => {
@@ -39,8 +43,8 @@ describe('Auth routes', () => {
             .send(postData)
 
         // then - we get a 401 unauthorized response
-        expect(response.status).toBe(401)
-        expect(response.body).toEqual({ message: 'invalid user or password' })
+        expectHTTPException(response, 401, 'invalid user or password')
+
     })
 
     it('It should return 200 and a token on valid email / password', async () => {

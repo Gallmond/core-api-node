@@ -29,9 +29,7 @@ class AuthController extends BaseController{
         )
     
         if(!accessToken){
-            res.status(401).json({
-                message: 'invalid user or password'
-            }).end()
+            next(new HTTPException(401, 'invalid user or password'))
             return
         }
     
